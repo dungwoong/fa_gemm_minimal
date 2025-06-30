@@ -173,6 +173,9 @@ int main(int argc, char **argv)
     float max_error_o = 0;
     int max_error_ref_idx = 0;
 
+    float large_tolerable_error = 0.01;
+    bool print_large_error = true;
+
     for (int i = 0; i < TOTAL_ELEMENTS; i++)
     {
         float diff = o[i] - o_ref[i % (TOTAL_ELEMENTS / ATTN_B)];
@@ -185,6 +188,10 @@ int main(int argc, char **argv)
             max_error_ref = o_ref[i % (TOTAL_ELEMENTS / ATTN_B)];
             max_error_ref_idx = i;
             max_error_o = o[i];
+        }
+        if (abs(diff) > large_tolerable_error && print_large_error) {
+            printf("LARGE ERROR at idx %d, (r%f - o%f) = %f\n", i, o_ref[i], o[i], o_ref[i] - o[i]);
+            print_large_error = false;
         }
         total_diff += abs(diff);
     }
