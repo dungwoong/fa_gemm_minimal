@@ -2,10 +2,17 @@
 #SBATCH --job-name=build_fa
 #SBATCH --export=ALL,DISABLE_DCGM=1
 #SBATCH --partition=gpunodes
-#SBATCH --gres=gpu:a6000:1
-#SBATCH --time=0:05:00
-#SBATCH --output=slurm-%j.out
-#SBATCH --error=slurm-%j.err
+#SBATCH --gres=gpu:rtx_a4500:1
+#SBATCH --time=0:10:00
+#SBATCH --output=logs/%x-%j.out
+#SBATCH --error=logs/%x-%j.err
+
+# rtx_4090 is 89
+# rtx_a4500 is 86
+# rtx_a6000 is 86
+# rtx_a4000 is 86
+
+mkdir -p logs
 
 # srun --partition=gpunodes --gres=gpu:rtx_4090:1 -t 5 cmake.sh
 
