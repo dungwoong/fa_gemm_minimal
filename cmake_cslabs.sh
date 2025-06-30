@@ -2,7 +2,7 @@
 #SBATCH --job-name=build_fa
 #SBATCH --export=ALL,DISABLE_DCGM=1
 #SBATCH --partition=gpunodes
-#SBATCH --gres=gpu:rtx_a4500:1
+#SBATCH --gres=gpu:rtx_a6000:1
 #SBATCH --time=0:10:00
 #SBATCH --output=logs/%x-%j.out
 #SBATCH --error=logs/%x-%j.err

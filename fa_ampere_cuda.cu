@@ -126,7 +126,6 @@ __global__ void attention_cuda_4090(bf16 *Q, bf16 *K, bf16 *V, bf16 *O)
         // reinterpret_cast<float4 *>(&k_smem[loadid][0][s_idx])[0] = reinterpret_cast<float4 *>(&K[g_idx])[0];
         cp_async_16(&k_smem[loadid][0][s_idx], &K[g_idx]);
     }
-    cp_async_commit_group();
     for (uint vLoadIdx = 0; vLoadIdx < ROWS; vLoadIdx += coords.strideRows)
     {
         int s_idx = qkv_layout::getIdx<8>(vLoadIdx + coords.innerRowA, coords.innerColA);
@@ -149,7 +148,6 @@ __global__ void attention_cuda_4090(bf16 *Q, bf16 *K, bf16 *V, bf16 *O)
                 int g_idx = q_nd_layout::getIdx<8>(0, next_load_idx * ROWS + kLoadIdx + coords.innerRowA, head, coords.innerColA);
                 cp_async_16(&k_smem[loadid][next_tic][s_idx], &K[g_idx]);
             }
-            cp_async_commit_group();
             for (uint vLoadIdx = 0; vLoadIdx < ROWS; vLoadIdx += coords.strideRows)
             {
                 int s_idx = qkv_layout::getIdx<8>(vLoadIdx + coords.innerRowA, coords.innerColA);
@@ -374,6 +372,8 @@ __global__ void attention_cuda_4090(bf16 *Q, bf16 *K, bf16 *V, bf16 *O)
                     }
                 }
             }
+
+            __syncthreads();
         }
     }
 
