@@ -33,8 +33,8 @@ set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} \
 
 # Set some variables
 set(CMAKE_CXX_STANDARD 20)
-set(CUDA_COMPUTE_CAPABILITY 120)
-set(CMAKE_CUDA_ARCHITECTURES 120)
+set(CUDA_COMPUTE_CAPABILITY ${CC})
+set(CMAKE_CUDA_ARCHITECTURES ${CC})
 
 # CUDA_INCLUDE_DIRS is set by find_package(CUDA)
 include_directories(${CUDA_INCLUDE_DIRS})
@@ -42,10 +42,14 @@ include_directories(${CUDA_INCLUDE_DIRS})
 include_directories(${PROJECT_SOURCE_DIR}/ThunderKittens/include)
 include_directories(${PROJECT_SOURCE_DIR}/cuTK/include)
 
-add_executable(fa4090ref fa2_4090_ref.cu)
-set_target_properties(fa4090ref PROPERTIES CUDA_ARCHITECTURES ${CUDA_COMPUTE_CAPABILITY})
-target_link_libraries(fa4090ref ${CUDA_LIBRARIES} cuda)
+add_executable(fa4090TK fa2_4090_ref.cu)
+set_target_properties(fa4090TK PROPERTIES CUDA_ARCHITECTURES ${CUDA_COMPUTE_CAPABILITY})
+target_link_libraries(fa4090TK ${CUDA_LIBRARIES} cuda)
 
 add_executable(fa_ampere_cuda fa_ampere_cuda.cu)
 set_target_properties(fa_ampere_cuda PROPERTIES CUDA_ARCHITECTURES ${CUDA_COMPUTE_CAPABILITY})
 target_link_libraries(fa_ampere_cuda ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES} cuda)
+
+add_executable(gemm cublas_ref.cu)
+set_target_properties(gemm PROPERTIES CUDA_ARCHITECTURES ${CUDA_COMPUTE_CAPABILITY})
+target_link_libraries(gemm ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES} cuda)
